@@ -1,65 +1,232 @@
 @font-face {
-   font-family: 'Heebo';
-   src: url('./fonts/Heebo-Light.woff2') format('woff2');
-   font-weight: 300;
-   font-style: normal;
-   font-display: swap;
+	font-family: "Heebo";
+	src: url("./fonts/Heebo-Light.woff2") format("woff2");
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
-   font-family: 'Heebo';
-   src: url('./fonts/Heebo-Bold.woff2') format('woff2');
-   font-weight: 700;
-   font-style: normal;
-   font-display: swap;
+	font-family: "Heebo";
+	src: url("./fonts/Heebo-Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
-   font-family: 'Yantramanav';
-   src: url('./fonts/Yantramanav-Bold.woff2') format('woff2');
-   font-weight: 700;
-   font-style: normal;
-   font-display: swap;
+	font-family: "Yantramanav";
+	src: url("./fonts/Yantramanav-Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
 }
 
-:root {
-   --color-dark: #000000;
-   --color-light: #FFFFFF;
-   --color-dark-grey: #404040;
-   --color-light-grey: #C4C4C4;
+/**
+  Нормализация блочной модели
+ */
+*,
+::before,
+::after {
+	box-sizing: border-box;
+}
 
-   --border-radius: 30px;
-   --border: 1px solid var(--color-light);
+/**
+   Убираем внутренние отступы слева тегам списков,
+   у которых есть атрибут class
+  */
+:where(ul, ol):where([class]) {
+	padding-left: 0;
+}
 
-   --font-family-base: 'Heebo', sans-serif;
-   --font-family-accent: 'Yantramanav', sans-serif;
+/**
+   Убираем внешние отступы body и двум другим тегам,
+   у которых есть атрибут class
+  */
+body,
+:where(blockquote, figure):where([class]) {
+	margin: 0;
+}
 
-   --input-height: 54px;
+/**
+   Убираем внешние отступы вертикали нужным тегам,
+   у которых есть атрибут class
+  */
+:where(h1, h2, h3, h4, h5, h6, p, ul, ol, dl):where([class]) {
+	margin-block: 0;
+}
 
-   --container-wight: 1300px;
-   --container-padding-x: 15px;
+:where(dd[class]) {
+	margin-left: 0;
+}
 
-   --transition-duration: 0.2s;
+:where(fieldset[class]) {
+	margin-left: 0;
+	padding: 0;
+	border: none;
+}
+
+/**
+   Убираем стандартный маркер маркированному списку,
+   у которого есть атрибут class
+  */
+:where(ul[class]) {
+	list-style: none;
+}
+
+:where(address[class]) {
+	font-style: normal;
+}
+
+/**
+   Обнуляем вертикальные внешние отступы параграфа,
+   объявляем локальную переменную для внешнего отступа вниз,
+   чтобы избежать взаимодействие с более сложным селектором
+  */
+p {
+	--paragraphMarginBottom: 24px;
+
+	margin-block: 0;
+}
+
+/**
+   Внешний отступ вниз для параграфа без атрибута class,
+   который расположен не последним среди своих соседних элементов
+  */
+p:where(:not([class]):not(:last-child)) {
+	margin-bottom: var(--paragraphMarginBottom);
+}
+
+/**
+   Упрощаем работу с изображениями
+  */
+img {
+	display: block;
+	max-width: 100%;
+}
+
+/**
+   Наследуем свойства шрифт для полей ввода
+  */
+input,
+textarea,
+select,
+button {
+	font: inherit;
+}
+
+html {
+	/**
+     Пригодится в большинстве ситуаций
+     (когда, например, нужно будет "прижать" футер к низу сайта)
+    */
+	height: 100%;
+}
+
+/**
+   Плавный скролл
+  */
+html,
+:has(:target) {
+	scroll-behavior: smooth;
 }
 
 body {
-   font-family: var(--font-family-base);
-   color: var(--color-light-grey);
-   font-weight: 300;
-   font-size: 16px;
-   line-height: 1.75;
-   background-color: var(--color-dark);
+	/**
+     Пригодится в большинстве ситуаций
+     (когда, например, нужно будет "прижать" футер к низу сайта)
+    */
+	min-height: 100%;
+	/**
+     Унифицированный интерлиньяж
+    */
+	line-height: 1.5;
+}
+
+/**
+   Приводим к единому цвету svg-элементы
+  */
+svg *[fill] {
+	fill: currentColor;
+}
+svg *[stroke] {
+	stroke: currentColor;
+}
+
+/**
+   Чиним баг задержки смены цвета при взаимодействии с svg-элементами
+  */
+svg * {
+	transition-property: fill, stroke;
+}
+
+/**
+   Удаляем все анимации и переходы для людей,
+   которые предпочитают их не использовать
+  */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	::before,
+	::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+:root {
+	--color-dark: #000000;
+	--color-light: #ffffff;
+	--color-dark-grey: #404040;
+	--color-light-grey: #c4c4c4;
+	--color-dark-alternate: #131619;
+
+	--border-radius: 30px;
+	--border: 1px solid var(--color-light);
+
+	--font-family-base: "Heebo", sans-serif;
+	--font-family-accent: "Yantramanav", sans-serif;
+
+	--input-height: 54px;
+
+	--container-wight: 1300px;
+	--container-padding-x: 15px;
+
+	--transition-duration: 0.2s;
+}
+
+body {
+	font-family: var(--font-family-base);
+	color: var(--color-light-grey);
+	font-weight: 300;
+	font-size: 16px;
+	line-height: 1.75;
+	background-color: var(--color-dark);
 }
 
 .container {
-   max-width: calc(--container-wight) + var(--container-padding-x) * 2;
-   margin-inline: auto;
-   padding-inline: var(--container-padding-x);
+	max-width: calc(--container-wight) + var(--container-padding-x) * 2;
+	margin-inline: auto;
+	padding-inline: var(--container-padding-x);
 }
 
-h1, h2, h3, h4, h5, h6 {
-   font-weight: 700;
-   text-transform: uppercase;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+.header-logo {
+   font-size: 24px;
+   font-family: var(--font-family-accent);
+   color: var(--color-light);
+   text-decoration: none;
+   letter-spacing: 1.2px;
 }
 
 a,
@@ -67,129 +234,198 @@ button,
 input,
 textarea,
 svg * {
-   transition-duration: var(--transition-duration);
+	transition-duration: var(--transition-duration);
 }
 
 a {
-   color: var(--color-light);
+	color: var(--color-light);
 }
 
 a:hover {
-   color: var(--color-light-grey);
+	color: var(--color-light-grey);
 }
 
 li {
-   list-style: none;
+	list-style: none;
 }
 
 .header {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   column-gap: 20px;
-   padding-inline: 32px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	column-gap: 20px;
+	padding-inline: 32px;
+	background-color: var(--color-dark-alternate);
 }
 
 .header-menu-list {
-   display: flex;
-   column-gap: 50px;
-   flex-wrap: wrap;
+	display: flex;
+	column-gap: 50px;
+	flex-wrap: wrap;
 }
 
 .header-menu-link {
-   display: inline-flex;
-   align-items: center;
-   height: 90px;
-   column-gap: 7px;
-   text-decoration: none;
-   text-transform: uppercase;
-   font-weight: 700;
-   font-size: 12px;
-   letter-spacing: 1.2px;
+	display: inline-flex;
+	align-items: center;
+	height: 90px;
+	column-gap: 7px;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 12px;
+	letter-spacing: 1.2px;
 }
 
 .header-menu-link.is-current::after {
-   content: "";
-   width: 5px;
-   height: 5px;
-   background-color: currentColor;
-   border-radius: 50%;
+	content: "";
+	width: 5px;
+	aspect-ratio: 1;
+	background-color: currentColor;
+	border-radius: 50%;
 }
 
 .button {
-   display: inline-flex;
-   height: 38px;
-   align-items: center;
-   padding-inline: 36px;
-   font-size: 12px;
-   font-weight: 700;
-   line-height: 2;
-   white-space: nowrap;
-   letter-spacing: 1.2px;
-   text-transform: uppercase;
-   background-color: var(--color-light);
-   border: none;
-   border-radius: var(--border-radius);
+	display: inline-flex;
+	height: 38px;
+	align-items: center;
+	padding-inline: 36px;
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 2;
+	white-space: nowrap;
+	letter-spacing: 1.2px;
+	text-transform: uppercase;
+	background-color: var(--color-light);
+	border: none;
+	border-radius: var(--border-radius);
 }
 
 .button:hover {
-   background-color: var(--color-light-grey);
+	background-color: var(--color-light-grey);
 }
 
 .header-actions {
-   display: flex;
-   column-gap: 40px;
+	display: flex;
+	column-gap: 40px;
 }
 
 .header-logo {
-   flex-shrink: 0;
+	flex-shrink: 0;
+}
+
+.visually-hidden {
+   position: absolute;
+   width: 1px;
+   height: 1px;
+   margin: -1px;
+   border: 0;
+   padding: 0;
+   white-space: nowrap;
+   clip-path: inset(100%);
+   clip: rect(0 0 0 0);
+   overflow: hidden;
 }
 
 .header-burger-button {
-   display: inline-flex;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	width: 40px;
+	aspect-ratio: 1;
+	background-color: transparent;
+	border: var(--border);
+	border-radius: var(--border-radius);
+}
+
+.banner {
+   color: var(--color-light);
+   background-color: var(--color-dark-alternate);
+   display: flex;
+   flex-direction: column;
+   justify-content: end;
+   min-height: 900px;
+   padding: 36px 70px;
+   text-transform: uppercase;
+}
+
+.banner-info {
+   display: flex;
+   align-items: end;
+   font-size: 38px;
+   line-height: 1.27;
+   font-weight: 700;
+}
+
+.banner-info::before {
+   content: "";
+   width: 194px;
+   aspect-ratio: 1;
+   background: url(./icons/arrow-down-right.svg) center/contain no-repeat;
+   margin-right: 30px;
+}
+
+.banner-title {
+   font-size: 300px;
+   line-height: 1;
+}
+
+.banner-pagination-list {
+   display: flex;
    justify-content: center;
-   align-items: center;
-   width: 40px;
-   height: 40px;
+   column-gap: 14px;
+}
+
+.banner-pagination-item {
+   display: flex;
+}
+
+.banner-pagination-button {
+   width: 10px;
+   aspect-ratio: 1;
+   padding: 0;
    background-color: transparent;
    border: var(--border);
-   border-radius: var(--border-radius);
+   border-radius: 50%;
+}
+
+.banner-pagination-button.is-current {
+   background-color: var(--color-light);
 }
 
 @media (max-width: 1024px) {
-   .header {
-      flex-wrap: wrap;
-      row-gap: 10px;
-      padding-top: 20px;
-      padding-inline: 15px;
-   }
-   .header-menu {
-      order: 1;
-   }
+	.header {
+		flex-wrap: wrap;
+		row-gap: 10px;
+		padding-top: 20px;
+		padding-inline: 15px;
+	}
+	.header-menu {
+		order: 1;
+	}
 
-   .header-menu-link {
-      height: 50px;
-   }
+	.header-menu-link {
+		height: 50px;
+	}
 }
 
 @media (min-width: 767px) {
-   .button {
-      padding-inline: 22px;
-   }
+	.button {
+		padding-inline: 22px;
+	}
 
-   .header {
-      padding-top: 10px;
-   }
+	.header {
+		padding-top: 10px;
+	}
 
-   .header-menu-list {
-      column-gap: 24px;
-   }
+	.header-menu-list {
+		column-gap: 24px;
+	}
 
-   .header-menu-link {
-      height: 32px;
-   }
+	.header-menu-link {
+		height: 32px;
+	}
 
-   .header-menu-link {
-      height: 32px;
-   }
+	.header-menu-link {
+		height: 32px;
+	}
 }
